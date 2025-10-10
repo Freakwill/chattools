@@ -29,12 +29,6 @@ class GeminiChat(ChatMixin, OpenAI):
             n_loop (int, optional): the number of times to get response
         """
 
-        if user_input.startswith(':'):
-            a, v = user_input[1:].split()
-            self.chat_params[a] = convert(v)
-            print(f'System: The parameter `{a}` is set to be `{v}`.')
-            return
-
         message = {"role": "user", "content": user_input}
         self.history.append(message)
 
@@ -53,8 +47,7 @@ class GeminiChat(ChatMixin, OpenAI):
                 raise e
 
         assistant_reply = response.choices[0].message.content
-        self.history.append({"role": "assistant", "content": assistant_reply})
-        print(f"{self.name}: {assistant_reply}")
+        return assistant_reply
 
 
 import google.generativeai as genai
