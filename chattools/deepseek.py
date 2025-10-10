@@ -5,6 +5,13 @@ from mixin import ChatMixin
 
 from utils import convert, read_yaml, menu
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv('DEEPSEEK_API_KEY')
+print(api_key)
+
 
 class DeepseekChat(ChatMixin, OpenAI):
 
