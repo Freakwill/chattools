@@ -56,8 +56,9 @@ import pathlib
 HISTORY_PATH = pathlib.Path('history.yaml')
 
 # Set API Key on https://aistudio.google.com/app/apikey
-GEMINI_API_KEY = "AIzaSyApwghFN31zbE25qQz_tlFr7DGiP2van8s"
-genai.configure(api_key=GEMINI_API_KEY)
+from utils import read_yaml, menu, get_api_key
+api_key = get_api_key('GEMINI')
+genai.configure(api_key=api_key)
 
 roles = read_yaml()
 role, description = menu(roles)

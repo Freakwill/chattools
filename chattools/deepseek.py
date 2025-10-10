@@ -3,14 +3,9 @@
 from openai import OpenAI, OpenAIError
 from mixin import ChatMixin
 
-from utils import convert, read_yaml, menu
+from utils import read_yaml, menu, get_api_key
 
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-api_key = os.getenv('DEEPSEEK_API_KEY')
-print(api_key)
+api_key = get_api_key('DEEPSEEK')
 
 
 class DeepseekChat(ChatMixin, OpenAI):

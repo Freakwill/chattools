@@ -44,3 +44,11 @@ def menu(roles):
             break
     return role, description
 
+
+def get_api_key(model):
+    from dotenv import load_dotenv
+    import os
+
+    load_dotenv()
+    return os.getenv(f'{model.upper()}_API_KEY')
+
