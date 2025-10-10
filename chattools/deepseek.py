@@ -55,12 +55,12 @@ class DeepseekChat(ChatMixin, OpenAI):
 
         assistant_reply = response.choices[0].message.content
         self.history.append({"role": "assistant", "content": assistant_reply})
-        print(f"{self.name}: {assistant_reply}")
+        print(f"{self.name.capitalize()}: {assistant_reply}")
 
 
 
 roles = read_yaml()
 role, description = menu(roles)
 print(f"System: you select {role}.")
-chat = DeepseekChat(description=description)
+chat = DeepseekChat(description=description, name=role)
 chat.run()
