@@ -68,11 +68,38 @@ class ChatMixin:
                 setattr(self, a, v)
                 print(f'System: The attribute `{a}` is set to be `{v}`.')
             else:
-                self._reply(user_input)
+                self.reply(user_input)
+                # self.post_process()
 
     def demo(self):
         self.init()
         for p in prompts:
             print(f"User: {p}")
-            self._reply(p)
+            self.reply(p)
 
+    def reply(self, user_input, n_loop=100):
+
+        if user_input.startswith(':'):
+            a, v = user_input[1:].split()
+            self.chat_params[a] = convert(v)
+            print(f'System: The parameter `{a}` is set to be `{v}`.')
+            return
+
+        assistant_reply = self._reply(user_input, n_loop=100)
+        self.history.append({"role": "assistant", "content": assistant_reply})
+        print(f"{self.name.capitalize()}: {assistant_reply}")
+
+
+    def _reply(self, user_input, n_loop=100):
+        """The reply method of the AI chat assistant
+        as a mapping user-input --> assistent-reply
+        """
+        raise NotImplemented
+
+    @property
+    def history_size(self):
+        return sum(len(d["content"]) for d in self.history)
+
+    @property
+    def history_len(self):
+        return len(self.history)
