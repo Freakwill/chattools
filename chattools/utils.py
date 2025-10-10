@@ -44,7 +44,3 @@ def menu(roles):
             break
     return role, description
 
-role, description = menu(roles)
-print(f"System: you select {role}.")
-chat = DeepseekChat(description=description)
-chat.run()
