@@ -20,6 +20,8 @@ def convert(v):
 import yaml
 from pathlib import Path
 
+
+HISTORY_FOLDER = Path(__file__).resolve().parent / 'history'
 ROLES_PATH = Path(__file__).resolve().parent / 'roles.yml'
 
 def read_yaml(roles_path=ROLES_PATH):
@@ -46,9 +48,7 @@ def menu(roles):
 
 
 def get_api_key(model):
-    from dotenv import load_dotenv
-    import os
-
-    load_dotenv()
-    return os.getenv(f'{model.upper()}_API_KEY')
+    from dotenv import dotenv_values
+    config = dotenv_values(".env.key")
+    return config[f'{model.upper()}_API_KEY']
 

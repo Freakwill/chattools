@@ -85,7 +85,10 @@ class ChatMixin:
             print(f'System: The parameter `{a}` is set to be `{v}`.')
             return
 
-        assistant_reply = self._reply(user_input, n_loop=100)
+        message = {"role": "user", "content": user_input}
+        self.history.append(message)
+
+        assistant_reply = self._reply(message, n_loop=100)
         self.history.append({"role": "assistant", "content": assistant_reply})
         print(f"{self.name.capitalize()}: {assistant_reply}")
 
