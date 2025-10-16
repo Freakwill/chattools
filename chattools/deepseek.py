@@ -3,7 +3,7 @@
 from openai import OpenAI, OpenAIError
 from mixin import ChatMixin
 
-from utils import read_yaml, menu, get_api_key
+from utils import get_api_key
 
 api_key = get_api_key('DEEPSEEK')
 
@@ -12,7 +12,7 @@ class DeepseekChat(ChatMixin, OpenAI):
 
     def __init__(self, description=None, history=[], name='Assistant', model="deepseek-chat", *args, **kwargs):
         super().__init__(
-            api_key="sk-7796b3cda6dd40abaf512835b76043fc",
+            api_key=api_key,
             base_url="https://api.deepseek.com",
             *args, **kwargs)
         self.description = description
@@ -21,16 +21,13 @@ class DeepseekChat(ChatMixin, OpenAI):
         self.model = model
         self.chat_params = {}
 
-    def _reply(self, user_input, n_loop=100):
+    def _reply(self, message, n_loop=100):
         """The reply method of the AI chat assistant
         
         Args:
-            user_input (str): the prompt inputed by the user
+            message (str): the prompt object inputed by the user
             n_loop (int, optional): the number of times to get response
         """
-
-        message = {"role": "user", "content": user_input}
-        self.history.append(message)
 
         k = 0
         while True:
@@ -53,6 +50,7 @@ class DeepseekChat(ChatMixin, OpenAI):
         return assistant_reply
 
 
+from utils import read_yaml, menu
 roles = read_yaml()
 role, description = menu(roles)
 print(f"System: you select {role}.")

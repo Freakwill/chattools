@@ -3,34 +3,29 @@
 from openai import OpenAI, OpenAIError
 from mixin import ChatMixin
 
+import google.generativeai as genai
+# Set API Key on https://aistudio.google.com/app/apikey
+from utils import get_api_key
+api_key = get_api_key('GEMINI')
+genai.configure(api_key=api_key)
+
 
 class GeminiChat(ChatMixin, OpenAI):
 
     def __init__(self, description=None, history=[], name='Assistant', model="gemini-1.5-flash", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.description = description
-        self._history = history
+        self._history = self.chat.history = history
         self.name = name
         self.model = model
 
-    @property
-    def history(self):
-        return self.chat.history
-
-    @history.setter
-    def history(self, v):
-        self.chat.history=v
-
-    def _reply(self, user_input, n_loop=100):
+    def _reply(self, message, n_loop=100):
         """The reply method of the AI chat assistant
         
         Args:
-            user_input (str): the prompt inputed by the user
+            message (str): the prompt object inputed by the user
             n_loop (int, optional): the number of times to get response
         """
-
-        message = {"role": "user", "content": user_input}
-        self.history.append(message)
 
         k = 0
         while True:
@@ -50,18 +45,9 @@ class GeminiChat(ChatMixin, OpenAI):
         return assistant_reply
 
 
-import google.generativeai as genai
-
-import pathlib
-HISTORY_PATH = pathlib.Path('history.yaml')
-
-# Set API Key on https://aistudio.google.com/app/apikey
-from utils import read_yaml, menu, get_api_key
-api_key = get_api_key('GEMINI')
-genai.configure(api_key=api_key)
-
-roles = read_yaml()
-role, description = menu(roles)
-print(f"System: you select {role}.")
-chat = GeminiChat(description=description, name=role)
-chat.run()
+# from utils import read_yaml, menu
+# roles = read_yaml()
+# role, description = menu(roles)
+# print(f"System: you select {role}.")
+# chat = GeminiChat(description=description, name=role)
+# chat.run()
