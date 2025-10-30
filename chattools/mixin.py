@@ -52,7 +52,7 @@ class ChatMixin:
             self.history.insert(0, message)
 
     def run(self, description=None):
-        # To chat with deepseek
+        # To chat with AI
         self.init(description=description)
 
         while True:
@@ -75,7 +75,8 @@ class ChatMixin:
             self.reply(p)
 
     def reply(self, user_input, n_loop=100):
-
+        """The reply of the AI chat assistant
+        """
         if user_input.startswith(':'):
             a, v = user_input[1:].split()
             self.chat_params[a] = convert(v)
