@@ -8,3 +8,5 @@ role, description = menu(roles)
 print(f"System: you select {role}.")
 chat = DeepseekChat(description=description, name=role)
 chat.run()
+
+# chat = GeminiChat(description=description, name=role)

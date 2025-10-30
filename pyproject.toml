@@ -1,0 +1,51 @@
+[project]
+name = "chattools"
+version = "0.1"
+description = "A simple framework for human-machine interaction based on large language models."
+keywords = [
+    "Large Language Models",
+    "Artificial Intelligence",
+    "DeepSeek",
+    "Genimi",
+    "OpenAI"
+]
+classifiers = [
+    "Environment :: MacOS X",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Development Status :: Mature"
+    ]
+license = "MIT"
+readme = {file = "README.md", content-type = "text/markdown"}
+authors = [
+    { name = "William Song", email = "30965609+Freakwill@users.noreply.github.com"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "openai"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/Freakwill/chattools"
+Repository = "https://github.com/Freakwill/chattools"
+
+
+[build-system]
+requires = ["poetry-core>=1.0"]
+build-backend = "poetry.core.masonry.api"

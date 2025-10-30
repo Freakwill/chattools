@@ -21,7 +21,7 @@ class DeepseekChat(ChatMixin, OpenAI):
         self.model = model
         self.chat_params = {}
 
-    def _reply(self, message, n_loop=100):
+    def _reply(self, message='', n_loop=100):
         """The reply method of the AI chat assistant
         
         Args:
@@ -46,8 +46,7 @@ class DeepseekChat(ChatMixin, OpenAI):
                 print(f"An unexpected error occurred:")
                 raise e
 
-        assistant_reply = response.choices[0].message.content
-        return assistant_reply
+        return response.choices[0].message.content
 
 
 from utils import read_yaml, menu
