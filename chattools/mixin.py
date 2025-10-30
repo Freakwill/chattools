@@ -56,20 +56,11 @@ class ChatMixin:
 
         while True:
             user_input = input("User: ")
-            if user_input in {'exit', 'quit', 'bye'}:
+            if user_input.lower() in {'exit', 'quit', 'bye'}:
                 print(f'{self.name}: Bye.')
                 break
-            elif user_input.startswith('>'):
-                self.execute(user_input[1:])
-            elif user_input.startswith('!'):
-                commands[user_input[1:].strip()](self)
-            elif user_input.startswith('#'):
-                a, v = user_input[1:].split()
-                setattr(self, a, v)
-                print(f'System: The attribute `{a}` is set to be `{v}`.')
-            else:
-                self.reply(user_input)
-                # self.post_process()
+            self.reply(user_input)
+            # self.post_process()
 
     def demo(self):
         self.init()
@@ -83,14 +74,21 @@ class ChatMixin:
             a, v = user_input[1:].split()
             self.chat_params[a] = convert(v)
             print(f'System: The parameter `{a}` is set to be `{v}`.')
-            return
+        elif user_input.startswith('#'):
+            a, v = user_input[1:].split()
+            setattr(self, a, v)
+            print(f'System: The attribute `{a}` is set to be `{v}`.')
+        elif user_input.startswith('>'):
+            self.execute(user_input[1:])
+        elif user_input.startswith('!'):
+            commands[user_input[1:].strip()](self)
+        else:
+            message = {"role": "user", "content": user_input}
+            self.history.append(message)
 
-        message = {"role": "user", "content": user_input}
-        self.history.append(message)
-
-        assistant_reply = self._reply(message, n_loop=100)
-        self.history.append({"role": "assistant", "content": assistant_reply})
-        print(f"{self.name.capitalize()}: {assistant_reply}")
+            assistant_reply = self._reply(message, n_loop=100)
+            self.history.append({"role": "assistant", "content": assistant_reply})
+            print(f"{self.name.capitalize()}: {assistant_reply}")
 
 
     def _reply(self, user_input, n_loop=100):
