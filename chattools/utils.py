@@ -43,6 +43,7 @@ def menu(roles):
 
     for role, description in roles.items():
         if role.startswith(r):
+            print(f"System: you select {role}.")
             break
     return role, description
 
