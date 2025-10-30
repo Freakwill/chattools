@@ -19,7 +19,7 @@ class GeminiChat(ChatMixin, OpenAI):
         self.name = name
         self.model = model
 
-    def _reply(self, message, n_loop=100):
+    def _reply(self, message='', n_loop=100):
         """The reply method of the AI chat assistant
         
         Args:
@@ -41,13 +41,4 @@ class GeminiChat(ChatMixin, OpenAI):
                 print(f"An unexpected error occurred:")
                 raise e
 
-        assistant_reply = response.choices[0].message.content
-        return assistant_reply
-
-
-# from utils import read_yaml, menu
-# roles = read_yaml()
-# role, description = menu(roles)
-# print(f"System: you select {role}.")
-# chat = GeminiChat(description=description, name=role)
-# chat.run()
+        return response.choices[0].message.content
