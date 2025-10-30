@@ -4,6 +4,9 @@ import pathlib
 import yaml
 
 
+history_file = pathlib.Path('history.yaml')
+
+
 def _clear(obj):
     obj.history = []
     print(f'System: The history is cleared.')
@@ -52,15 +55,18 @@ class ChatMixin:
         # To chat with deepseek
         self.init(description=description)
 
-        history_file = pathlib.Path('history.yaml')
-
         while True:
             user_input = input("User: ")
             if user_input.lower() in {'exit', 'quit', 'bye'}:
                 print(f'{self.name}: Bye.')
                 break
             self.reply(user_input)
-            # self.post_process()
+            self.post_process()
+
+    def post_process(self):
+        max_len = 20
+        if len(self.history) > max_len:
+            self.history = self.history[-max_len:]
 
     def demo(self):
         self.init()
@@ -101,6 +107,3 @@ class ChatMixin:
     def history_size(self):
         return sum(len(d["content"]) for d in self.history)
 
-    @property
-    def history_len(self):
-        return len(self.history)
