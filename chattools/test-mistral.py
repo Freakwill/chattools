@@ -5,7 +5,5 @@ from utils import read_yaml, menu
 
 roles = read_yaml()
 role, description = menu(roles)
-chat = DeepseekChat(description=description, name=role)
+chat = MistralChat(description=description, name=role)
 chat.run()
-
-# chat = GeminiChat(description=description, name=role)
