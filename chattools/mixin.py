@@ -74,7 +74,7 @@ class ChatMixin:
             print(f"User: {p}")
             self.reply(p)
 
-    def reply(self, user_input, n_loop=100):
+    def reply(self, user_input, max_retries=100, memory_flag=True):
         """The reply of the AI chat assistant
         """
         if user_input.startswith(':'):
@@ -91,14 +91,16 @@ class ChatMixin:
             commands[user_input[1:].strip()](self)
         else:
             message = {"role": "user", "content": user_input}
-            self.history.append(message)
 
-            assistant_reply = self._reply(message, n_loop=100)
+            assistant_reply = self._reply(message, max_retries=100)
             self.history.append({"role": "assistant", "content": assistant_reply})
             print(f"{self.name.capitalize()}: {assistant_reply}")
 
+        if memory_flag:
+            self.history.append(message)
 
-    def _reply(self, user_input, n_loop=100):
+
+    def _reply(self, message, max_retries=100):
         """The reply method of the AI chat assistant
         as a mapping user-input --> assistent-reply
         """
@@ -108,3 +110,4 @@ class ChatMixin:
     def history_size(self):
         return sum(len(d["content"]) for d in self.history)
 
+    

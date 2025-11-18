@@ -34,18 +34,17 @@ def read_yaml(roles_path=ROLES_PATH):
 
 
 def menu(roles):
+    from fuzzywuzzy import fuzz
+
     print('System: please select one role from the following menu:')
     print('    -------------')
     for role, description in roles.items():
         print(f"{role:>16}: {description}")
     print('    -------------')
     r = input("User: ")
-
-    for role, description in roles.items():
-        if role.startswith(r):
-            print(f"System: you select {role}.")
-            break
-    return role, description
+    role = max(roles.keys(), key=lambda x: fuzz.ratio(r, x))
+    print(f"System: you select {role}.")
+    return role, roles[role]
 
 
 def get_api_key(model):
