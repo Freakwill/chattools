@@ -19,7 +19,7 @@ class MistralChat(ChatMixin, Mistral):
         self.model = model
         self.chat_params = {}
 
-    def _reply(self, message='', max_retries=100):
+    def _reply(self, message, max_retries=100):
         """The reply method of the AI chat assistant
         
         Args:
@@ -43,11 +43,3 @@ class MistralChat(ChatMixin, Mistral):
             except Exception as e:
                 raise f"An unexpected error occurred: {e}"
 
-
-if __name__ == "__main__":
-
-    from utils import read_yaml, menu
-    roles = read_yaml()
-    role, description = menu(roles)
-    chat = MistralChat(description=description, name=role)
-    chat.run()
