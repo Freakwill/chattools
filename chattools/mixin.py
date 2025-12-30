@@ -30,6 +30,8 @@ commands = {
   "save": _save
 }
 
+MAX_LEN = 1000
+
 
 class ChatMixin:
 
@@ -74,7 +76,7 @@ class ChatMixin:
             print(f"User: {p}")
             self.reply(p)
 
-    def reply(self, user_input, max_retries=100, memory_flag=True):
+    def reply(self, user_input, messages=[], memory_flag=True, show=True, max_retries=100):
         """The reply of the AI chat assistant
         """
         if user_input.startswith(':'):
@@ -91,20 +93,44 @@ class ChatMixin:
             commands[user_input[1:].strip()](self)
         else:
             message = {"role": "user", "content": user_input}
+            response = self._reply(messages + message, max_retries=100)
+            assistant_reply = response.choices[0].message.content
+            if show:
+                print(f"{self.name.capitalize()}: {assistant_reply}")
 
-            assistant_reply = self._reply(message, max_retries=100)
-            self.history.append({"role": "assistant", "content": assistant_reply})
-            print(f"{self.name.capitalize()}: {assistant_reply}")
-
-        if memory_flag:
-            self.history.append(message)
-
+            if memory_flag:
+                self.history.extend(messages + [
+                    message,
+                    {"role": "assistant", "content": assistant_reply
+                    }])
+                if len(self.history) > MAX_LEN:
+                    self.history.pop(0)
+            self.current_reply = assistant_reply
 
     def _reply(self, message, max_retries=100):
-        """The reply method of the AI chat assistant
-        as a mapping user-input --> assistent-reply
+        """Wrapper of `chat.completions.create` method of LLM
+        The reply method of the AI chat assistant
+        as a mapping message --> response
+
+        Args:
+            message: the prompt object inputed by the user
+            max_retries (int, optional): the number of times to get response
         """
-        raise NotImplemented
+
+        k = 0
+        while True:
+            try:
+                return self.chat.completions.create(
+                        model=self.model,
+                        messages=self.history + [message],
+                        **self.chat_params)
+            except OpenAIError as e:
+                k +=1
+                if k >= max_retries:
+                    print(f"System: An error occurred after {max_retries} attempts:")
+                    raise e
+            except Exception as e:
+                raise f"An unexpected error occurred: {e}"
 
     @property
     def history_size(self):

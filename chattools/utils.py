@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from openai import OpenAI, OpenAIError
-from mixin import ChatMixin
 
 
 def convert(v):
@@ -23,6 +22,7 @@ from pathlib import Path
 
 HISTORY_FOLDER = Path(__file__).resolve().parent / 'history'
 ROLES_PATH = Path(__file__).resolve().parent / 'roles.yml'
+CHAT_PATH = Path('~/Programming/Python/mywork/chattools').expanduser()
 
 def read_yaml(roles_path=ROLES_PATH):
     if isinstance(roles_path, str): roles_path = Path(roles_path)
@@ -49,6 +49,6 @@ def menu(roles):
 
 def get_api_key(model):
     from dotenv import dotenv_values
-    config = dotenv_values(".env.key")
+    config = dotenv_values(CHAT_PATH/".env.key")
     return config[f'{model.upper()}_API_KEY']
 
