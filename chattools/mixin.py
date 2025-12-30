@@ -78,6 +78,13 @@ class ChatMixin:
 
     def reply(self, user_input, messages=[], memory_flag=True, show=True, max_retries=100):
         """The reply of the AI chat assistant
+        
+        Args:
+            user_input (str): The query inputed by the user
+            messages (list, optional): Additional information before user input
+            memory_flag (bool, optional): save the messages
+            show (bool, optional): display the reply
+            max_retries (int, optional): The maximum of retries
         """
         if user_input.startswith(':'):
             a, v = user_input[1:].split()
@@ -93,7 +100,7 @@ class ChatMixin:
             commands[user_input[1:].strip()](self)
         else:
             message = {"role": "user", "content": user_input}
-            response = self._reply(messages + message, max_retries=100)
+            response = self._reply(messages + [message], max_retries=100)
             assistant_reply = response.choices[0].message.content
             if show:
                 print(f"{self.name.capitalize()}: {assistant_reply}")
