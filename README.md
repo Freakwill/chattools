@@ -1,8 +1,8 @@
 # chattools
 
-my tools for AI chat, such as gemini, deepseek
+The most simple tool for AI chat, such as gemini, deepseek, ollama
 
-save the API keys in `.env.key` file in the current path.
+plz save the API keys in `.env.key` file in the current path.
 
 ## Example
 
@@ -13,12 +13,28 @@ run `python path/to/test.py` (deepseek)
 run `python path/to/test-mistral.py`  to utilize mistral AI.
 
 
+## Make CLI
+
+```python
+# default model is `gpt-oss:120b`
+
+from chattools import OllamaChat
+
+def chat(description="Intelligent enough to help me for anything.", name="Asistant"):
+    with OllamaChat(description=description, name=name) as ochat:
+        ochat.run()
+
+if __name__ == "__main__":
+    from fire import Fire
+    Fire(chat)
+```
+
 
 ## Code
 
 
-
 ```python
+# import YourLLM API 
 from mixin import ChatMixin
 from utils import get_api_key
 
@@ -27,30 +43,32 @@ from utils import get_api_key
 
 class YourChat(ChatMixin, YourLLM):
 
-    def __init__(self, description=None, history=[], name='Assistant', model="mistral-small-latest", *args, **kwargs):
-        super().__init__(api_key=api_key, *args, **kwargs)
+    def __init__(self, description=None, history=[], name='Assistant', model="model-name", *args, **kwargs):
+        super().__init__(api_key=api_key, *args, **kwargs)  # init method of super class
         self.description = description
-        self._history = history
         self.name = name
         self.model = model
         self.chat_params = {}
 
-    def _reply(self, message, max_retries=100):
-        """The reply method of the AI chat assistant
-        
-        Args:
-            message: the prompt object inputed by the user
-            max_retries (int, optional): the number of times to get response
+        self.history = history
+
+    def _reply(self, messages, max_retries=100):
+        """The wrapper method of the original `chat` method
         """
 
         k = 0
         while True:
+            # try `max_retries` times
             try:
-                # get the response of the model
-                return response.choices[0].message.content
+                """
+                get the response of the model. such as 
+                self.chat.completions.create(
+                        model=self.model,
+                        messages=messages,
+                        **self.chat_params)
+                """
             except:
                 ...
-            
 
 ```
 

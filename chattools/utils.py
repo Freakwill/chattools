@@ -50,5 +50,5 @@ def menu(roles):
 def get_api_key(model):
     from dotenv import dotenv_values
     config = dotenv_values(CHAT_PATH/".env.key")
-    return config[f'{model.upper()}_API_KEY']
+    return config.get(f'{model.upper()}_API_KEY', '')
 
