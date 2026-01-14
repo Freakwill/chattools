@@ -27,7 +27,7 @@ class GeminiChat(ChatMixin, OpenAI):
     def history(self, v):
         self._history = self.chat.history = v
 
-    def _reply(self, message='', max_retries=100):
+    def _reply(self, messages, max_retries=100):
         """The reply method of the AI chat assistant
         
         Args:
@@ -38,7 +38,7 @@ class GeminiChat(ChatMixin, OpenAI):
         k = 0
         while True:
             try:
-                return self.chat.completions.create(message)
+                return self.chat.completions.create(messages)
             except OpenAIError as e:
                 k +=1
                 if k >= max_retries:

@@ -7,33 +7,30 @@ import yaml
 history_file = pathlib.Path('history.yaml')
 
 
-def _clear(obj):
-    obj.history = []
-    print(f'System: The history is cleared.')
+class Commands:
 
+    def clear(obj):
+        obj.history = []
+        print(f'System: The history is cleared.')
 
-def _save(obj):
-    if history_file.exists():
-        print("The available history file will be covered!")
-    history_file.write_text(yaml.dump(obj.history, allow_unicode=True))
+    def save(obj):
+        if history_file.exists():
+            print("The available history file will be covered!")
+        history_file.write_text(yaml.dump(obj.history, allow_unicode=True))
 
-def _load(obj):
-    if history_file.exists():
-        obj.history = yaml.safe_load(str(history_file))
-    else:
-        print('No history is loaded!')
+    def load(obj):
+        if history_file.exists():
+            obj.history = yaml.safe_load(str(history_file))
+        else:
+            print('No history is loaded!')
 
-
-commands = {
-  "clear": _clear,
-  "load": _load,
-  "save": _save
-}
 
 MAX_LEN = 1000
 
 
 class ChatMixin:
+
+    get_reply = lambda response: response.choices[0].message.content
 
     @property
     def history(self):
@@ -59,7 +56,7 @@ class ChatMixin:
 
         while True:
             user_input = input("User: ")
-            if user_input.lower() in {'exit', 'quit', 'bye'}:
+            if user_input.strip().lower() in {'exit', 'quit', 'bye'}:
                 print(f'{self.name}: Bye.')
                 break
             self.reply(user_input)
@@ -86,42 +83,46 @@ class ChatMixin:
             show (bool, optional): display the reply
             max_retries (int, optional): The maximum of retries
         """
+
         if user_input.startswith(':'):
             a, v = user_input[1:].split()
             self.chat_params[a] = convert(v)
-            print(f'System: The parameter `{a}` is set to be `{v}`.')
+            print(f'System: The parameter `{a}` of chat method is set to be `{v}`.')
         elif user_input.startswith('#'):
             a, v = user_input[1:].split()
             setattr(self, a, v)
-            print(f'System: The attribute `{a}` is set to be `{v}`.')
+            print(f'System: The attribute `{a}` of chat object is set to be `{v}`.')
         elif user_input.startswith('>'):
             self.execute(user_input[1:])
         elif user_input.startswith('!'):
-            commands[user_input[1:].strip()](self)
+            cmd = user_input.strip('! ')
+            try:
+                getattr(Commands, cmd)(self)
+            except AttributeError:
+                print(f"{cmd} is not a valid command!")
+            except Exception as e:
+                print(e)
         else:
             message = {"role": "user", "content": user_input}
-            response = self._reply(messages + [message], max_retries=100)
-            assistant_reply = response.choices[0].message.content
+            messages.append(message)
+            response = self._reply(self.history + messages, max_retries=100)
+            assistant_reply = self.__class__.get_reply(response)
+            print(assistant_reply)
             if show:
                 print(f"{self.name.capitalize()}: {assistant_reply}")
 
             if memory_flag:
-                self.history.extend(messages + [
-                    message,
-                    {"role": "assistant", "content": assistant_reply
-                    }])
+                messages.append({"role": "assistant", "content": assistant_reply
+                    })
+                self.history.extend(messages)
                 if len(self.history) > MAX_LEN:
                     self.history.pop(0)
             self.current_reply = assistant_reply
 
-    def _reply(self, message, max_retries=100):
+    def _reply(self, messages, max_retries=100):
         """Wrapper of `chat.completions.create` method of LLM
         The reply method of the AI chat assistant
         as a mapping message --> response
-
-        Args:
-            message: the prompt object inputed by the user
-            max_retries (int, optional): the number of times to get response
         """
 
         k = 0
@@ -129,7 +130,7 @@ class ChatMixin:
             try:
                 return self.chat.completions.create(
                         model=self.model,
-                        messages=self.history + [message],
+                        messages=messages,
                         **self.chat_params)
             except OpenAIError as e:
                 k +=1

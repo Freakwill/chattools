@@ -16,10 +16,9 @@ class GroqChat(ChatMixin, Groq):
         self.name = name
         self.model = model
         self.chat_params = {}
+        self.history = history
 
-        self.history = [{"role": "system", "content":self.description}] + history
-
-    def _reply(self, message, max_retries=100):
+    def _reply(self, messages, max_retries=100):
         """The reply method of the AI chat assistant
         
         Args:
@@ -30,10 +29,11 @@ class GroqChat(ChatMixin, Groq):
         k = 0
         while True:
             try:
-                return self.responses.create(
+                response = self.responses.create(
                         model=self.model,
-                        messages=self.history + [message],
+                        messages=messages,
                         **self.chat_params)
+                return response.choices[0]
             except SDKError as e:
                 k +=1
                 if k >= max_retries:
