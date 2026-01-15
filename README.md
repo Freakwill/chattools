@@ -78,7 +78,7 @@ class YourChat(ChatMixin, YourLLM):
 
 register a command as follows
 ```
-from commands import Commands
+from chat_tools.commands import Commands
 
 @Commands.register("read")
 def read_history(obj, path):
