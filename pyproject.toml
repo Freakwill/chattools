@@ -1,7 +1,7 @@
 [project]
 name = "chat-tools"
-version = "2.0"
-description = "A simple framework for human-machine interaction based on large language models."
+version = "2.1"
+description = "Tools for human-machine interaction based on large language models."
 keywords = [
     "Large Language Models",
     "Artificial Intelligence",
@@ -14,9 +14,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -24,7 +22,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
-    "Development Status :: Mature"
     ]
 license = "MIT"
 readme = {file = "README.md", content-type = "text/markdown"}
