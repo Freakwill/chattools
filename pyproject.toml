@@ -1,6 +1,6 @@
 [project]
-name = "chattools"
-version = "1.1"
+name = "chat-tools"
+version = "1.6"
 description = "A simple framework for human-machine interaction based on large language models."
 keywords = [
     "Large Language Models",
@@ -42,10 +42,6 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Freakwill/chattools"
-Repository = "https://github.com/Freakwill/chattools"
+Homepage = "https://github.com/Freakwill/chat-tools"
+Repository = "https://github.com/Freakwill/chat-tools"
 
-
-[build-system]
-requires = ["poetry-core>=1.0"]
-build-backend = "poetry.core.masonry.api"
