@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 
 import shlex
-from commands import Commands
-
-
-history_file = pathlib.Path('history.yaml')
+from .commands import Commands
 
 
 MAX_LEN = 1000
@@ -21,10 +18,6 @@ class ChatMixin:
     @history.setter
     def history(self, v):
         self._history = v
-
-    def execute(self, *args, **kwargs):
-        # call python compiler
-        return exec(*args, **kwargs)
 
     def init(self, description=None):
         description = description or self.description
@@ -124,5 +117,15 @@ class ChatMixin:
     @property
     def history_size(self):
         return sum(len(d["content"]) for d in self.history)
+
+    def execute(self, *args, **kwargs):
+        # call python compiler
+        return exec(*args, **kwargs)
+
+    def load_commands(self, commands=Commands):
+        self._commands = commands
+
+    def get_command(self, cmd_name):
+        return getattr(self._commands, cmd_name)
 
     

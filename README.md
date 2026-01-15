@@ -20,13 +20,15 @@ run `python path/to/test-mistral.py`  to utilize mistral AI.
 
 from chattools import OllamaChat
 
-def chat(description="Intelligent enough to help me for anything.", name="Asistant"):
-    with OllamaChat(description=description, name=name) as ochat:
-        ochat.run()
+description="Intelligent enough to help me for anything."
+name="Asistant"
+
+with OllamaChat(description=description, name=name) as chat:
+    chat.run()
 
 if __name__ == "__main__":
     from fire import Fire
-    Fire(chat)
+    Fire()
 ```
 
 
