@@ -11,28 +11,30 @@ class Commands:
 
     # the first argument should be the object of AI-chat
 
-    def clear(obj):
+    @classmethod
+    def clear(cls, obj):
         obj.history = []
         print(f'💻System: The history is cleared.')
 
-    def save(obj):
+    @classmethod
+    def save(cls, obj):
         if not history_file.exists():     
             print("💻System: The history is stored in {history_file}!")
             history_file.write_text(yaml.dump(obj.history, allow_unicode=True))
         else:
             print("💻System: {history_file} is available! The history will not be stored")
 
-    def load(obj):
+    @classmethod
+    def load(cls, obj):
         if history_file.exists():
             print('💻System: The history is loaded from {history_file}!')
             obj.history = yaml.safe_load(str(history_file))
         else:
             print('💻System: No history is loaded!')
 
-
-def cmd(name=None):
-
-    def dec(f):
-        name = name or f.__name__
-        setattr(Commands, name, f)
-    return dec
+    @classmethod
+    def register(cls, name=None):
+        def dec(f):
+            name = name or f.__name__
+            setattr(cls, name, f)
+        return dec
