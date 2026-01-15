@@ -1,6 +1,6 @@
 [project]
 name = "chattools"
-version = "0.1"
+version = "1.1"
 description = "A simple framework for human-machine interaction based on large language models."
 keywords = [
     "Large Language Models",
