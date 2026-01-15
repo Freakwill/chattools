@@ -7,4 +7,4 @@ from .mistral import *
 from .gemini import *
 from .ollama import *
 
-__version__ = "1.0"
+__version__ = "1.4"
