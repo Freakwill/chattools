@@ -1,28 +1,10 @@
 #!/usr/bin/env python3
 
-import pathlib
-import yaml
+import shlex
+from commands import Commands
 
 
 history_file = pathlib.Path('history.yaml')
-
-
-class Commands:
-
-    def clear(obj):
-        obj.history = []
-        print(f'System: The history is cleared.')
-
-    def save(obj):
-        if history_file.exists():
-            print("The available history file will be covered!")
-        history_file.write_text(yaml.dump(obj.history, allow_unicode=True))
-
-    def load(obj):
-        if history_file.exists():
-            obj.history = yaml.safe_load(str(history_file))
-        else:
-            print('No history is loaded!')
 
 
 MAX_LEN = 1000
@@ -55,9 +37,9 @@ class ChatMixin:
         self.init(description=description)
 
         while True:
-            user_input = input("User: ")
+            user_input = input("👨User: ")
             if user_input.strip().lower() in {'exit', 'quit', 'bye'}:
-                print(f'{self.name}: Bye.')
+                print(f'🤖{self.name.capitalize()}: Bye.')
                 break
             self.reply(user_input)
             self.post_process()
@@ -67,10 +49,10 @@ class ChatMixin:
         if len(self.history) > max_len:
             self.history = self.history[-max_len:]
 
-    def demo(self):
+    def demo(self, prompts):
         self.init()
         for p in prompts:
-            print(f"User: {p}")
+            print(f"👨User: {p}")
             self.reply(p)
 
     def reply(self, user_input, messages=[], memory_flag=True, show=True, max_retries=100):
@@ -87,19 +69,20 @@ class ChatMixin:
         if user_input.startswith(':'):
             a, v = user_input[1:].split()
             self.chat_params[a] = convert(v)
-            print(f'System: The parameter `{a}` of chat method is set to be `{v}`.')
+            print(f'💻System: The parameter `{a}` of chat method is set to be `{v}`.')
         elif user_input.startswith('#'):
             a, v = user_input[1:].split()
             setattr(self, a, v)
-            print(f'System: The attribute `{a}` of chat object is set to be `{v}`.')
+            print(f'💻System: The attribute `{a}` of chat object is set to be `{v}`.')
         elif user_input.startswith('>'):
-            self.execute(user_input[1:])
+            self.execute(user_input.lstrip('> '))
         elif user_input.startswith('!'):
-            cmd = user_input.strip('! ')
+            cmd = user_input.lstrip('! ')
+            cmd, *args = shlex.split(cmd)
             try:
-                getattr(Commands, cmd)(self)
+                getattr(Commands, cmd)(self, *args)
             except AttributeError:
-                print(f"{cmd} is not a valid command!")
+                print(f"💻System: {cmd} is not registered yet!")
             except Exception as e:
                 print(e)
         else:
@@ -107,9 +90,8 @@ class ChatMixin:
             messages.append(message)
             response = self._reply(self.history + messages, max_retries=100)
             assistant_reply = self.__class__.get_reply(response)
-            print(assistant_reply)
             if show:
-                print(f"{self.name.capitalize()}: {assistant_reply}")
+                print(f"🤖{self.name.capitalize()}: {assistant_reply}")
 
             if memory_flag:
                 messages.append({"role": "assistant", "content": assistant_reply
@@ -135,8 +117,7 @@ class ChatMixin:
             except OpenAIError as e:
                 k +=1
                 if k >= max_retries:
-                    print(f"System: An error occurred after {max_retries} attempts:")
-                    raise e
+                    print(f"💻System: An error occurred after {max_retries} attempts: {e}")
             except Exception as e:
                 raise f"An unexpected error occurred: {e}"
 

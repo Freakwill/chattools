@@ -31,16 +31,14 @@ class MistralChat(ChatMixin, Mistral):
         k = 0
         while True:
             try:
-                response = self.chat.complete(
+                return self.chat.complete(
                         model=self.model,
                         messages=messages,
                         **self.chat_params)
-                return response.choices[0]
             except SDKError as e:
                 k +=1
                 if k >= max_retries:
-                    print(f"System: An error occurred after {max_retries} attempts:")
-                    raise e
+                    print(f"💻System: An error occurred after {max_retries} attempts: {e}")
             except Exception as e:
                 raise f"An unexpected error occurred: {e}"
 

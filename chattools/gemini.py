@@ -42,6 +42,6 @@ class GeminiChat(ChatMixin, OpenAI):
             except OpenAIError as e:
                 k +=1
                 if k >= max_retries:
-                    raise f"System: An error occurred after {max_retries} attempts: {e}"
+                    print(f"💻System: An error occurred after {max_retries} attempts: {e}")
             except Exception as e:
                 raise f"An unexpected error occurred: {e}"

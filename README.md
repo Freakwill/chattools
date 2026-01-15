@@ -72,6 +72,20 @@ class YourChat(ChatMixin, YourLLM):
 
 ```
 
+## Commands
+
+register a command as follows
+```
+from commands import Commands
+
+@Commands.register("read")
+def read_history(obj, path):
+    # obj.history = read from `path`
+    pass
+```
+
+use the command in the chat as `!read path`
+
 ---
 
 ![](pic.jpg)

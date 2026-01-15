@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from .mixin import ChatMixin
-from groq import Groq
+from groq import Groq, APIConnectionError
 
 from .utils import get_api_key
 
@@ -29,16 +29,14 @@ class GroqChat(ChatMixin, Groq):
         k = 0
         while True:
             try:
-                response = self.responses.create(
+                return self.responses.create(
                         model=self.model,
                         messages=messages,
                         **self.chat_params)
-                return response.choices[0]
-            except SDKError as e:
+            except APIConnectionError as e:
                 k +=1
                 if k >= max_retries:
-                    print(f"System: An error occurred after {max_retries} attempts:")
-                    raise e
+                    print(f"💻System: An error occurred after {max_retries} attempts: {e}")
             except Exception as e:
                 raise f"An unexpected error occurred: {e}"
 
