@@ -15,7 +15,10 @@ run `python path/to/test-mistral.py`  to utilize mistral AI.
 
 ## Make CLI
 
+create ollama-chat.py
 ```python
+#!/usr/bin/env python3
+
 # default model is `gpt-oss:120b`
 
 from chattools import OllamaChat
@@ -25,11 +28,9 @@ name="Asistant"
 
 with OllamaChat(description=description, name=name) as chat:
     chat.run()
-
-if __name__ == "__main__":
-    from fire import Fire
-    Fire()
 ```
+
+run `chmod` dommand and `ollama-chat.py`
 
 
 ## Code
