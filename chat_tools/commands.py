@@ -35,6 +35,6 @@ class Commands:
     @classmethod
     def register(cls, name=None):
         def dec(f):
-            name = name or f.__name__
-            setattr(cls, name, f)
+            _name = name or f.__name__
+            setattr(cls, _name, f)
         return dec

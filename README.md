@@ -21,7 +21,7 @@ create ollama-chat.py
 
 # default model is `gpt-oss:120b`
 
-from chattools import OllamaChat
+from chat_tools import OllamaChat
 
 description="Intelligent enough to help me for anything."
 name="Asistant"

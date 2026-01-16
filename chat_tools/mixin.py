@@ -112,7 +112,7 @@ class ChatMixin:
                 if k >= max_retries:
                     print(f"💻System: An error occurred after {max_retries} attempts: {e}")
             except Exception as e:
-                raise f"An unexpected error occurred: {e}"
+                raise e
 
     @property
     def history_size(self):
@@ -127,5 +127,15 @@ class ChatMixin:
 
     def get_command(self, cmd_name):
         return getattr(self._commands, cmd_name)
+
+
+class BaseChat(ChatMixin):
+    
+    def __init__(self, description='You are a very intelligent agent', history=[], name='Assistant', model=None, *args, **kwargs):
+        self.description = description
+        self.name = name
+        self.model = model
+        self.history = history
+        self.chat_params = {}
 
     

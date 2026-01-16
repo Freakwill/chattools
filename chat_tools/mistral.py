@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from .mixin import ChatMixin
+from .base import ChatMixin
 from mistralai import Mistral
 from mistralai.models.sdkerror import SDKError
 
@@ -11,14 +11,13 @@ api_key = get_api_key('MISTRAL')
 
 class MistralChat(ChatMixin, Mistral):
 
-    def __init__(self, description=None, history=[], name='Assistant', model="mistral-small-latest", *args, **kwargs):
-        super().__init__(api_key=api_key, *args, **kwargs)
+    def __init__(self, description='You are a very intelligent agent', history=[], name='Assistant', model="mistral-small-latest", *args, **kwargs):
+        super().__init__(api_key=api_key, model=model, *args, **kwargs)
         self.description = description
         self.name = name
         self.model = model
-        self.chat_params = {}
-
         self.history = history
+        self.chat_params = {}
 
     def _reply(self, messages, max_retries=100):
         """The reply method of the AI chat assistant
