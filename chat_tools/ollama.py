@@ -38,7 +38,7 @@ class OllamaChat(ChatMixin, Client):
         self.history = history
         self.chat_params = {}
 
-    def _reply(self, messages, max_retries=20):
+    def _reply(self, messages, max_retries=10):
         """Wrapper of `chat.completions.create` method of LLM
         The reply method of the AI chat assistant
         as a mapping message --> response
@@ -55,7 +55,7 @@ class OllamaChat(ChatMixin, Client):
             except ResponseError as e:
                 k +=1
                 if k >= max_retries:
-                    raise Exception(f"System: An error occurred after {max_retries} attempts: {e}")
+                    raise Exception(f"💻System: An error occurred after {max_retries} attempts: {e}")
             except Exception as e:
                 raise e
 

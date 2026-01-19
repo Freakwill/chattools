@@ -6,7 +6,6 @@ from .ollama import *
 from .deepseek import *
 from .mistral import *
 from .gemini import *
-# from .grok import *
-# from .chatgpt import *
+from .gpt import *
 
-__version__ ="3.0"
+__version__ = "3.1"
