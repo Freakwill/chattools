@@ -17,6 +17,11 @@ class Commands:
         print(f'💻System: The history is cleared.')
 
     @classmethod
+    def pop(cls, obj, k):
+        obj.history.pop(k)
+        print(f'💻System: The k-th message in history is poped.')
+
+    @classmethod
     def save(cls, obj):
         if not history_file.exists():     
             print("💻System: The history is stored in {history_file}!")

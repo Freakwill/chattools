@@ -29,7 +29,7 @@ class OllamaChat(ChatMixin, Client):
             super().__init__(host='https://ollama.com',
                 headers={'Authorization': 'Bearer ' + api_key}, *args, **kwargs)
         else:
-            super().__init__(model=model, *args, **kwargs)
+            super().__init__(*args, **kwargs)
             if any(self.model==m.model for m in ollama.list().models):
                 raise ModelNotFoundError(self.model)
         self.description = description
@@ -55,7 +55,7 @@ class OllamaChat(ChatMixin, Client):
             except ResponseError as e:
                 k +=1
                 if k >= max_retries:
-                    raise Exception(f"💻System: An error occurred after {max_retries} attempts: {e}")
+                    print(f"💻System: An error occurred after {max_retries} attempts: {e}")
             except Exception as e:
                 raise e
 
