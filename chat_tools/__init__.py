@@ -8,4 +8,4 @@ from .mistral import *
 from .gemini import *
 from .gpt import *
 
-__version__ = "3.1"
+__version__ = "3.2"
